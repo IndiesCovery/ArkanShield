@@ -1,0 +1,25 @@
+{
+  "name": "y",
+  "version": "0.0.1",
+  "description": "Arkanoid variation with powers and time traveling",
+  "main": " ",
+  "scripts": {
+    "test": " "
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/IndiesCovery/ArkanShield.git"
+  },
+  "author": "@indiescovery",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/IndiesCovery/ArkanShield/issues"
+  },
+  "homepage": "https://github.com/IndiesCovery/ArkanShield",
+  "devDependencies": {
+    "gulp": "^3.8.11",
+    "gulp-concat": "^2.5.2",
+    "gulp-uglify": "^1.2.0",
+    "gulp-webserver": "^0.9.0"
+  }
+}
