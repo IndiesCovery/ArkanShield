@@ -1,14 +1,13 @@
 Ball = function(game, x, y, key){
   Phaser.Sprite.call(this, game, x, y, key);
+  this.speed = {};
+  this.speed.y = 400;
+  this.speed.x = 100;
 }
 
 Ball.prototype = Object.create(Phaser.Sprite.prototype);
 Ball.prototype.constructor = Ball;
 
-Ball.prototype.update = function() {
-  this.position.x += 5;
-  this.position.y += 5;
-};
 
 Ball.prototype.move = function() {
 };
@@ -30,67 +29,61 @@ function preload() {
 
 
 function create() {
-  //Configs physics
-  game.physics.startSystem(Phaser.Physics.P2JS);
-  game.physics.p2.restitution = 0.9;
+
+  //Configs physics and world bounds
+  game.physics.startSystem(Phaser.Physics.ARCADE);
+  //game.physics.arcade.checkCollision.down = false;
+  
+  game.world.bounds.setTo(20, 50, 766, 500);
+    if (game.camera.bounds)
+    {
+        //  The Camera can never be smaller than the game size
+        game.camera.bounds.setTo(0, 0, 800, 600);
+    }
+  game.physics.setBoundsToWorld();
+
 
   //set background
   game.add.sprite(0, 0, 'screen_border');
 
-
   //creates sprites
   ship = game.add.sprite(200, 510, 'ship');
-  ball = new Ball(game, game.world.randomX, game.world.randomY, 'ball');
+  ball = new Ball(game, 100, 100, 'ball');
   game.add.existing(ball);
 
 
   //set physics
-  game.physics.p2.enable(ship, false);
-  game.physics.p2.enable(ball, false);
-  ball.body.setCircle(16);
-  //ship.body.createBodyCallback(ball, hitBall, this);
-  ship.body.fixedRotation = true;
-  ball.body.velocity.destination[0]=120;
-  ball.body.velocity.destination[1]=120;
-  ball.body.inertia = 0;
-  ship.body.inertia = 0;
+  game.physics.enable(ship, Phaser.Physics.ARCADE);
+  game.physics.enable(ball, Phaser.Physics.ARCADE);
 
-  //
-  game.physics.p2.setImpactEvents(true);
-  setMaterials();
+  //ship.body.createBodyCallback(ball, hitBall, this);
+  console.log(game);
+  ship.body.immovable = true;
+  ship.body.bounce.set(0);
+  ship.body.collideWorldBounds = true;
+
+  ball.anchor.set(0.5);
+  ball.body.bounce.set(1);
+  ball.body.velocity.setTo(ball.speed.x, ball.speed.y);
+  ball.body.collideWorldBounds = true;
 
   //set input
   cursors = game.input.keyboard.createCursorKeys();
 
 };
 
-function setMaterials(){
-  var shipMaterial = game.physics.p2.createMaterial('shipMaterial', ship.body);
-  var ballMaterial = game.physics.p2.createMaterial('ballMaterial', ball.body);
-
-  var contactMaterial = game.physics.p2.createContactMaterial(shipMaterial, ballMaterial);
-
-  contactMaterial.friction = 0;     // Friction to use in the contact of these two materials.
-  contactMaterial.restitution = 1.0;  // Restitution (i.e. how bouncy it is!) to use in the contact of these two materials.
-  contactMaterial.stiffness = 1e7;    // Stiffness of the resulting ContactEquation that this ContactMaterial generate.
-  contactMaterial.relaxation = 3;     // Relaxation of the resulting ContactEquation that this ContactMaterial generate.
-  contactMaterial.frictionStiffness = 1e7;    // Stiffness of the resulting FrictionEquation that this ContactMaterial generate.
-  contactMaterial.frictionRelaxation = 3;     // Relaxation of the resulting FrictionEquation that this ContactMaterial generate.
-  contactMaterial.surfaceVelocity = 0; 
-
-}
-
 function hitBall(body1, body2) {
 }
 
 function update(){
-  ball.move();
-  ship.body.setZeroVelocity();
+  game.physics.arcade.collide(ship, ball);
+  
   if(cursors.left.isDown){
-    ship.body.moveLeft(400);
+    ship.body.x -= 10;
   }else if(cursors.right.isDown){
-    ship.body.moveRight(400);
+    ship.body.x += 10;
   }
+
 };
 
 function render() {
