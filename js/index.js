@@ -27,14 +27,13 @@ function preload() {
   game.load.image('ball', 'assets/images/ball.png');
 };
 
-
 function create() {
 
   //Configs physics and world bounds
   game.physics.startSystem(Phaser.Physics.ARCADE);
   //game.physics.arcade.checkCollision.down = false;
   
-  game.world.bounds.setTo(20, 50, 766, 500);
+  game.world.bounds.setTo(15, 50, 768, 500);
     if (game.camera.bounds)
     {
         //  The Camera can never be smaller than the game size
@@ -61,27 +60,34 @@ function create() {
   ship.body.immovable = true;
   ship.body.bounce.set(0);
   ship.body.collideWorldBounds = true;
+  ship.anchor.set(0.5);
 
   ball.anchor.set(0.5);
   ball.body.bounce.set(1);
   ball.body.velocity.setTo(ball.speed.x, ball.speed.y);
   ball.body.collideWorldBounds = true;
-
+ 
   //set input
   cursors = game.input.keyboard.createCursorKeys();
 
+
 };
 
-function hitBall(body1, body2) {
+function hitBall(_ship, _ball) {
+
+  var dx = _ball.x - _ship.x;
+  _ball.body.velocity.x = 10*dx;
+
 }
 
-function update(){
-  game.physics.arcade.collide(ship, ball);
-  
-  if(cursors.left.isDown){
-    ship.body.x -= 10;
-  }else if(cursors.right.isDown){
-    ship.body.x += 10;
+
+function update(){  
+ 
+  game.physics.arcade.collide(ship, ball, hitBall, null, this);
+  if(cursors.left.isDown && ship.body.x - 10 >= 8){
+      ship.body.x -= 10;
+  }else if(cursors.right.isDown && ship.body.x + 10 <= 728){
+      ship.body.x += 10;
   }
 
 };
