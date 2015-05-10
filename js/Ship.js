@@ -2,6 +2,7 @@ Ship = function(game, x, y, key){
   Phaser.Sprite.call(this, game, x, y, key);
   this.lifes = 5;
   this.anchor.set(0.5);
+  this.speed = 10;
 }
 
 Ship.prototype = Object.create(Phaser.Sprite.prototype);
