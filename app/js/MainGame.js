@@ -45,7 +45,6 @@ function create() {
 
   //creates sprites
   ship = new Ship(game, 200, 510, 'ship');
-  console.log(ship.y - ship.height);
   ball = new Ball(game, ship.x, ship.y - ship.height, 'ball');
 
   //adds sprites
@@ -99,7 +98,6 @@ function releaseBall(){
   if(ballOnShip){
       ballOnShip = false;
       ball.body.velocity.y = -ball.speed.y;
-      console.log((Math.floor(Math.random*2)==1? 1:-1));
       ball.body.velocity.x = (Math.random()*200 + 1) * (Math.floor(Math.random()*2)==1?1:-1); 
   }
 }
@@ -107,12 +105,10 @@ function releaseBall(){
 function update(){  
   manageGeneralInput();
   currentAge.update();  
-  
-  console.log(ball.body.velocity.x);
 
   if(currentAge.done){
       delete currentAge;
-      currentAgeIndex++;
+      currentAgeIndex = currentAgeIndex==2? 0:currentAgeIndex+1;
       currentAge = new ages[currentAgeIndex]();
       ballOnShip = true;
       ball.x = ship.x;

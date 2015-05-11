@@ -9,7 +9,7 @@ Future = function(){
 
 Future.prototype.fillBricksList = function(){
 
-		for(var i = 0; i < 16; i++){	
+		for(var i = 0; i < 14; i++){	
 			for(var j = 0; j < 6; j++){ 		 
 			 	var brick = new Brick(game, (i+1)*50, (j+1)*50, 'brickFuture'+(Math.floor(Math.random()*3+1)));
 	 			this.bricks.add(brick);
