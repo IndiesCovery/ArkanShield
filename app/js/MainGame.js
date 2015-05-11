@@ -4,12 +4,28 @@ var game = new Phaser.Game(800, 600, Phaser.AUTO, 'game', {
   update: update,
   render:render
 });
-var ballOnShip = false;
+
+var ballOnShip = true;
+var ship = {};
+var ball = {};
+var ages = [];
+var currentAgeIndex = 0;
+var currentAge = {};
 
 function preload() {
   game.load.image('screen_border', 'assets/images/screen_border.png');
   game.load.spritesheet('ship', 'assets/images/ShieldSprite.png', 64, 16, 5);
   game.load.image('ball', 'assets/images/ball.png');
+
+  for(var i = 1; i <= 4; i++)
+    game.load.image('brickStone'+i, 'assets/images/BlockStone_0'+i+'.png');
+  
+  for(var i = 1; i <= 5; i++)
+    game.load.image('brickRenaissance'+i, 'assets/images/BlockRenaissance_0'+i+'.png');
+
+  for(var i = 1; i <= 3; i++)
+    game.load.image('brickFuture'+i, 'assets/images/BlockFuture_0'+i+'.png');
+  
 };
 
 
@@ -27,11 +43,11 @@ function create() {
     }
   game.physics.setBoundsToWorld();
 
-
   //creates sprites
   ship = new Ship(game, 200, 510, 'ship');
-  ball = new Ball(game, 100, 100, 'ball');
-  
+  console.log(ship.y - ship.height);
+  ball = new Ball(game, ship.x, ship.y - ship.height, 'ball');
+
   //adds sprites
   game.add.existing(ball);
   game.add.existing(ship);
@@ -49,7 +65,7 @@ function create() {
   ship.body.collideWorldBounds = true;
 
   ball.body.bounce.set(1);
-  ball.body.velocity.setTo(ball.speed.x, ball.speed.y);
+  ball.body.velocity.setTo(0, 0);
   ball.body.collideWorldBounds = true;
   ball.checkWorldBounds = true;
   ball.events.onOutOfBounds.add(ballOnOutOfBounds, this);
@@ -57,6 +73,12 @@ function create() {
   //set input
   cursors = game.input.keyboard.createCursorKeys();
   game.input.onDown.add(releaseBall, this);
+
+  ages[0] = Stone;
+  ages[1] = Reinassance;
+  ages[2] = Future;
+
+  currentAge = new Stone();
 };
 
 function ballOnOutOfBounds(){
@@ -70,7 +92,6 @@ function ballOnOutOfBounds(){
 function hitShipBall(_ship, _ball) {
   var dx = _ball.x - _ship.x;
   _ball.body.velocity.x = 10*dx;
-
   _ship.frame = _ball.x > _ship.x ? 3:4;
 }
 
@@ -78,13 +99,34 @@ function releaseBall(){
   if(ballOnShip){
       ballOnShip = false;
       ball.body.velocity.y = -ball.speed.y;
-      ball.body.velocity.x = Math.random()*100 + 1;   
+      console.log((Math.floor(Math.random*2)==1? 1:-1));
+      ball.body.velocity.x = (Math.random()*200 + 1) * (Math.floor(Math.random()*2)==1?1:-1); 
   }
 }
 
 function update(){  
+  manageGeneralInput();
+  currentAge.update();  
   
+  console.log(ball.body.velocity.x);
 
+  if(currentAge.done){
+      delete currentAge;
+      currentAgeIndex++;
+      currentAge = new ages[currentAgeIndex]();
+      ballOnShip = true;
+      ball.x = ship.x;
+      ball.y = ship.y - (ship.height/2 + ball.height/2);
+  }
+
+};
+
+function render(){
+
+}
+
+function manageGeneralInput(){
+  
   if(cursors.left.isDown && ship.body.x - 10 >= 8){
       ship.move(-10,0);
   }else if(cursors.right.isDown && ship.body.x + 10 <= 728){
@@ -97,9 +139,4 @@ function update(){
      game.physics.arcade.collide(ship, ball, hitShipBall, null, this);
   else
      ball.x = ship.x;
-  
-};
-
-function render() {
-  
 }
