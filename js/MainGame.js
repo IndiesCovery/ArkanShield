@@ -73,11 +73,21 @@ function create() {
   cursors = game.input.keyboard.createCursorKeys();
   game.input.onDown.add(releaseBall, this);
 
-  ages[0] = Stone;
-  ages[1] = Reinassance;
-  ages[2] = Future;
+  ages[0] = {
+    spriteSet:'brickStone',
+    frames: 4
+  };
+  ages[1] = {
+    spriteSet:'brickRenaissance',
+    frames: 5
+  };
+  ages[2] = {
+    spriteSet:'brickFuture',
+    frames: 3
+  };
 
-  currentAge = new Stone();
+  currentAge = new Age(ages[0]);
+  console.log(currentAge);
 };
 
 function ballOnOutOfBounds(){
@@ -109,7 +119,7 @@ function update(){
   if(currentAge.done){
       delete currentAge;
       currentAgeIndex = currentAgeIndex==2? 0:currentAgeIndex+1;
-      currentAge = new ages[currentAgeIndex]();
+      currentAge = new Age(ages[currentAgeIndex]);
       ballOnShip = true;
       ball.x = ship.x;
       ball.y = ship.y - (ship.height/2 + ball.height/2);
