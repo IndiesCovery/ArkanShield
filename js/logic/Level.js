@@ -14,7 +14,7 @@ spriteSets = {
 };
 
 PATTERNS = {
-  regular: [1],
+  regular: [[1]],
   diagonal: [
     [1,0],
     [0,1]
@@ -24,12 +24,21 @@ PATTERNS = {
     [1,0]
   ],
   columns: [
-    [1,0],
     [1,0]
   ], 
   rows: [
-    [1,1],
-    [0,0]
+    [1],
+    [0]
+  ], 
+  squares: [
+    [1, 0, 1],
+    [0, 0, 0],
+    [1, 0, 1]
+  ], 
+  ts: [
+    [0, 1],
+    [0, 0],
+    [1, 1],
   ]
 };
 
@@ -39,7 +48,7 @@ CONFIGS = {
   bricks: [20, 40, 60, 80, 100],
   durabilityRanges: [[100,0,0], [80,20,0], [60,30,10]],
   widths: [50, 80, 100],
-  patterns: [PATTERNS.regular, PATTERNS.diagonal, PATTERNS.transversal, PATTERNS.columns, PATTERNS.rows],
+  patterns: [PATTERNS.regular, PATTERNS.diagonal, PATTERNS.transversal, PATTERNS.columns, PATTERNS.rows, PATTERNS.exp1, PATTERNS.ts],
   timeouts: [45, 120, 180],
   scores: [20, 50, 100, 200],
   spriteSets: [spriteSets.stone, spriteSets.renaissance, spriteSets.future],
