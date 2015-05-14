@@ -3,23 +3,26 @@ Age = function(level){
   this.bricks.enableBody = true;
   this.bricks.physicsBodyType = Phaser.Physics.ARCADE;
   this.done = false;
-  this.fillBricksList(level.spriteSet);
+  this.fillBricksList(level);
   this.powers_manager = new Powers();
 };
 
 Age.prototype.constructor = Age;
 
-Age.prototype.fillBricksList = function(spriteSet){
+Age.prototype.fillBricksList = function(level){
+  width = 19-Math.round(level.width*19/100);
+  console.log(level.width, width);
   limits = {
     top: 3,     // regular 0
-    bottom: 15,  // regular 6
-    left: 4,    // regular 0
-    right: 17   // regular 14
+    bottom: 20,  // regular 6
+    left: 2+width/2,    // regular 0
+    right: 19-width/2   // regular 14
   };
+
   
   for(var i = limits.left; i < limits.right; i++){  
     for(var j = limits.top; j < limits.bottom; j++){      
-      var brick = new Brick(game, (i+1)*34, (j+1)*18, spriteSet.name+(Math.floor(Math.random()*spriteSet.frames+1)));
+      var brick = new Brick(game, (i+1)*34, (j+1)*18, level.spriteSet.name+(Math.floor(Math.random()*level.spriteSet.frames+1)));
       this.bricks.add(brick);
       brick.body.immovable = true;
       brick.body.bounce.set(0);

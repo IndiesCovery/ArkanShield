@@ -5,6 +5,8 @@ var game = new Phaser.Game(800, 600, Phaser.AUTO, 'game', {
   render:render
 });
 
+var DEBUG = true;
+
 var ballOnShip = true;
 var ship = {};
 var balls;
@@ -89,9 +91,9 @@ function create() {
 
   space_key.onDown.add(releaseBall, this);
 
-  ages[0] = Level.generate();
-  ages[1] = Level.generate();
-  ages[2] = Level.generate();
+  ages[0] = Level.generate(Math.floor(Math.random()*388800));
+  ages[1] = Level.generate(Math.floor(Math.random()*388800));
+  ages[2] = Level.generate(Math.floor(Math.random()*388800));
 
   currentAge = new Age(ages[0]);
 };
@@ -165,6 +167,9 @@ function manageGeneralInput(){
       ship.move(10,0);
   }else{
       ship.frame = 0;
+      if(DEBUG){
+        ship.body.x = ball.x-Math.random()*64;
+      }
   }
     
   if(!ballOnShip)
