@@ -3,15 +3,32 @@ Age = function(level){
   this.bricks.enableBody = true;
   this.bricks.physicsBodyType = Phaser.Physics.ARCADE;
   this.done = false;
-  this.fillBricksList(level);
+  this.level = level;
+  this.fillBricksList();
   this.powers_manager = new Powers();
 };
 
 Age.prototype.constructor = Age;
 
-Age.prototype.fillBricksList = function(level){
-  width = 19-Math.round(level.width*19/100);
-  console.log(level.width, width);
+Age.prototype.applyPattern = function(i, j, pattern){
+  // i in columns
+  // j in rows
+  var row = j%pattern.length; 
+  var col = i%pattern[0].length;
+  return pattern[row][col] == 1; 
+};
+
+
+Age.prototype.createBrick = function(i, j){
+  var brick = new Brick(game, (i+1)*34, (j+1)*18, this.level.spriteSet.name+(Math.floor(Math.random()*this.level.spriteSet.frames+1)));
+  this.bricks.add(brick);
+  brick.body.immovable = true;
+  brick.body.bounce.set(0);
+};
+
+
+Age.prototype.fillBricksList = function(){
+  width = 19-Math.round(this.level.width*19/100);
   limits = {
     top: 3,     // regular 0
     bottom: 20,  // regular 6
@@ -20,12 +37,12 @@ Age.prototype.fillBricksList = function(level){
   };
 
   
-  for(var i = limits.left; i < limits.right; i++){  
-    for(var j = limits.top; j < limits.bottom; j++){      
-      var brick = new Brick(game, (i+1)*34, (j+1)*18, level.spriteSet.name+(Math.floor(Math.random()*level.spriteSet.frames+1)));
-      this.bricks.add(brick);
-      brick.body.immovable = true;
-      brick.body.bounce.set(0);
+  for(var i = limits.left; i < limits.right; i++){
+    for(var j = limits.top; j < limits.bottom; j++){
+      if(this.applyPattern(i, j, this.level.pattern)==0){
+        continue;
+      }
+      this.createBrick(i, j);
     }
   }
 }
