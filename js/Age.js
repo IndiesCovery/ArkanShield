@@ -1,15 +1,15 @@
-Age = function(theme){
+Age = function(level){
   this.bricks = game.add.group();
   this.bricks.enableBody = true;
   this.bricks.physicsBodyType = Phaser.Physics.ARCADE;
   this.done = false;
-  this.fillBricksList(theme.spriteSet, theme.frames);
+  this.fillBricksList(level.spriteSet);
   this.powers_manager = new Powers();
 };
 
 Age.prototype.constructor = Age;
 
-Age.prototype.fillBricksList = function(theme, frames){
+Age.prototype.fillBricksList = function(spriteSet){
   limits = {
     top: 3,     // regular 0
     bottom: 15,  // regular 6
@@ -19,7 +19,7 @@ Age.prototype.fillBricksList = function(theme, frames){
   
   for(var i = limits.left; i < limits.right; i++){  
     for(var j = limits.top; j < limits.bottom; j++){      
-      var brick = new Brick(game, (i+1)*34, (j+1)*18, theme+(Math.floor(Math.random()*frames+1)));
+      var brick = new Brick(game, (i+1)*34, (j+1)*18, spriteSet.name+(Math.floor(Math.random()*spriteSet.frames+1)));
       this.bricks.add(brick);
       brick.body.immovable = true;
       brick.body.bounce.set(0);

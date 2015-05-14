@@ -89,20 +89,9 @@ function create() {
 
   space_key.onDown.add(releaseBall, this);
 
-  ages[0] = {
-    spriteSet:'brickStone',
-    frames: 4
-  };
-
-  ages[1] = {
-    spriteSet:'brickRenaissance',
-    frames: 5
-  };
-
-  ages[2] = {
-    spriteSet:'brickFuture',
-    frames: 3
-  };
+  ages[0] = Level.generate();
+  ages[1] = Level.generate();
+  ages[2] = Level.generate();
 
   currentAge = new Age(ages[0]);
 };
