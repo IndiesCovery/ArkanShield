@@ -24,6 +24,7 @@ gulp.task('default', ['build-min', 'build-dev', 'webserver'], function() {
 gulp.task('webserver', function(){
   gulp.src('./app')
   .pipe(webserver({
-    livereload: true
+    livereload: true,
+    host: '0.0.0.0',
   }));
 });

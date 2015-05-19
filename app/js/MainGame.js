@@ -168,7 +168,7 @@ function manageGeneralInput(){
   }else{
       ship.frame = 0;
       if(DEBUG){
-        ship.body.x = ball.x-Math.random()*64;
+        ship.body.x = balls.getAt(0).x-Math.random()*64;
       }
   }
     
