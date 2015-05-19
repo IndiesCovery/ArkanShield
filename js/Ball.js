@@ -4,7 +4,7 @@ Ball = function(game, x, y, key){
   this.speed = {};
   this.speed.y = 350;
   if(DEBUG){
-    this.speed.y = 1000;
+    this.speed.y = 700;
   }
   this.anchor.set(0.5);
 }

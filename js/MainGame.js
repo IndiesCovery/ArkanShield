@@ -9,7 +9,7 @@ var DEBUG = true;
 
 var ballOnShip = true;
 var ship = {};
-var balls;
+//var balls;
 var ages = [];
 var currentAgeIndex = 0;
 var currentAge = {};
@@ -132,7 +132,7 @@ function update(){
 
       if(balls.length > 1){
         for(var i = 1; i < balls.length; i++){
-          balls.removeAt(i);
+          balls.removeChildAt(i);
         }
       }
   }
@@ -168,7 +168,23 @@ function manageGeneralInput(){
   }else{
       ship.frame = 0;
       if(DEBUG){
-        ship.body.x = balls.getAt(0).x-Math.random()*64;
+        var max = 0;
+        var selected = 0;
+        for (var i = 0; i < balls.length; i++) {
+          var localBall = balls.getAt(i);
+          if(localBall.y > max){
+            max = localBall.y;
+            selected = i;
+          }
+        };
+        for (var i = 0; i < powers.length; i++) {
+          if(ship.body.y-powers.getAt(i).y<10&&ship.body.y-powers.getAt(i).y>=0){
+            ship.body.x = powers.getAt(i).x;
+          }
+        }
+        if(ship.body.y-balls.getAt(selected).y<30){
+          ship.body.x = balls.getAt(selected).x-16-Math.random()*32;
+        }
       }
   }
     
