@@ -85,7 +85,9 @@ function create() {
 
   //set input
   cursors = game.input.keyboard.createCursorKeys();
-  game.input.onDown.add(releaseBall, this);
+  space_key = game.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR);
+
+  space_key.onDown.add(releaseBall, this);
 
   ages[0] = {
     spriteSet:'brickStone',
