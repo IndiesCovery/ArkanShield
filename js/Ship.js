@@ -14,3 +14,11 @@ Ship.prototype.move = function(x, y) {
 
 	this.frame = x>0? 1:2;
 };
+
+Ship.prototype.getBigger = function(){
+	this.width = this.width * 2;
+}
+
+Ship.prototype.getSmaller = function(){
+	this.width = this.width/2;
+}
