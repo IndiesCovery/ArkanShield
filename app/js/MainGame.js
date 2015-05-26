@@ -22,6 +22,7 @@ function preload() {
   game.load.spritesheet('ship', 'assets/images/ShieldSprite.png', 64, 16, 5);
   game.load.image('ball', 'assets/images/ball.png');
   game.load.spritesheet('lvl_powers', 'assets/images/lvl_powers.png',26,26,5);
+  game.load.image('stone_age_background', 'assets/images/stone_age_background.png');
 
   for(var i = 1; i <= 4; i++)
     game.load.image('brickStone'+i, 'assets/images/BlockStone_0'+i+'.png');
@@ -53,16 +54,17 @@ function create() {
   ship = new Ship(game, 200, 510, 'ship');
   var ball = new Ball(game, ship.x, ship.y - ship.height, 'ball');
   
-  //adds sprites
-  game.add.existing(ball);
-  game.add.existing(ship);
-
+  
+  //set background
+  game.add.sprite(15, 50, 'stone_age_background');
+  game.add.sprite(0, 0, 'screen_border');
+  
   //adds groups
   balls =  game.add.group(); 
   powers =  game.add.group();
 
-  //set background
-  game.add.sprite(0, 0, 'screen_border');
+   //adds sprites
+  game.add.existing(ship);
 
   //set ship physics
   game.physics.enable(ship, Phaser.Physics.ARCADE);

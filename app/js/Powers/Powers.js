@@ -15,7 +15,7 @@ Powers.prototype.doubleBallPower = {
 					game.add.existing(ball2);
 					balls.add(ball2);
 					ball2.body.velocity.x = balls.getAt(i).body.velocity.x - 100;
-					ball2.body.velocity.y = balls.getAt(i).body.velocity.y;
+					ball2.body.velocity.y = balls.getAt(i).body.velocity.y + Math.random()*10+10;
 					ball2.body.bounce.set(1);
 	  				ball2.body.collideWorldBounds = true;
 	  				ball2._bounds = balls.getAt(i)._bounds;
