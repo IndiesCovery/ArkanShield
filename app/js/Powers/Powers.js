@@ -23,32 +23,100 @@ Powers.prototype.doubleBallPower = {
 			}
 
 		},
-	key: 'doubleBallPower',
-	expirable: true,
-	time: 0
-}
+	backFunctionality: function(){},
+	key: 'lvl_powers',
+	frame: 2,
+	expirable: false
+};
 
+Powers.prototype.strongFastBall = {
+	functionality: function(){
+		for(var i= 0; i < balls.length; i++){
+				balls.getChildAt(i).body.velocity.y = balls.getChildAt(i).body.velocity.y > 0? balls.getChildAt(i).speed.y*2: -balls.getChildAt(i).speed.y*2;
+				balls.getChildAt(i).force = 10;
+			}
+	},
+	backFunctionality: function(){
+		for(var i = 0; i < balls.length; i++){
+			balls.getChildAt(i).body.velocity.y = balls.getChildAt(i).body.velocity.y> 0?balls.getChildAt(i).speed.y:-balls.getChildAt(i).speed.y;
+			balls.getChildAt(i).force = 1;
+		}
+	},
+	key: 'lvl_powers',
+	frame: 1,
+	expirable:true
+};
 
+Powers.prototype.slowBall = {
+	functionality: function(){
+		for(var i = 0; i< balls.length; i++){
+			balls.getChildAt(i).body.velocity.y = balls.getChildAt(i).body.velocity.y > 0? balls.getChildAt(i).speed.y / 2: -balls.getChildAt(i).speed.y / 2;		
+		}
+	},
+	backFunctionality: function(){
+		for(var i = 0; i< balls.length; i++){
+			balls.getChildAt(i).body.velocity.y = balls.getChildAt(i).body.velocity.y > 0? balls.getChildAt(i).speed.y:-balls.getChildAt(i).speed.y;		
+		}
+	},
+	key: 'lvl_powers',
+	frame: 0,
+	expirable: true
+};
+
+Powers.prototype.longShip = {
+	functionality: function(){
+		ship.getBigger();
+	},
+	backFunctionality: function(){
+		ship.getNormal();
+	},
+	key: 'lvl_powers',
+	frame: 4,
+	expirable: true
+};
+
+Powers.prototype.smallShip = {
+	functionality: function(){
+		ship.getSmaller();
+	},
+	backFunctionality: function(){
+		ship.getNormal();
+	},
+	key: 'lvl_powers',
+	frame: 3,
+	expirable: true
+};
 
 Powers.prototype.createPowers = function(){
 	this.powers_from_blocks.push(this.doubleBallPower);
+	this.powers_from_blocks.push(this.smallShip);
+	this.powers_from_blocks.push(this.longShip);
+	this.powers_from_blocks.push(this.slowBall);
+	this.powers_from_blocks.push(this.strongFastBall);
 }
 
 Powers.prototype.createPowerFromBlock = function(x, y){
 	var rand_pow = Math.floor(Math.random()*(this.powers_from_blocks.length));
-	var power = new Power(game, x, y, this.powers_from_blocks[rand_pow].key, this.powers_from_blocks[rand_pow].functionality);
+	var pow = this.powers_from_blocks[rand_pow];
+	var power = new Power(game, x, y, pow.key, pow.frame, pow.functionality, pow.backFunctionality);
+	power.expirable = pow.expirable;
+	power.time = 0;
 	powers.add(power);
 	power.body.velocity.y = 100;
-}
+};
 
 Powers.prototype.getPowerFromAge = function(){}
 
 Powers.prototype.update = function(){
-	
-	if(this.activePower.expirable){
-		this.activePower.time += Phaser.Time.elapsed;
-		if(this.activePower.time > 60000){
-				this.activePower.kill();		
+
+	if(this.activePower != undefined){
+		if(this.activePower.expirable){
+			this.activePower.time += game.time.elapsed;
+			if(this.activePower.time > 40000){
+					this.activePower.backFunctionality();
+					this.activePower.kill();	
+					this.activePower = undefined;	
+				}
 			}
-		}
-}
+	}
+};

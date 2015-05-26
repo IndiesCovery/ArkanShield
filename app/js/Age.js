@@ -45,46 +45,58 @@ Age.prototype.fillBricksList = function(){
       this.createBrick(i, j);
     }
   }
-}
+};
 
 Age.prototype.hitBrickBall  = function(_ball, _brick){
   
     _brick.life -= _ball.force;
-    console.log(_brick.life);
 
     if(_brick.life <= 0){
        
       var i = Math.floor(Math.random()*100+1);
-      if(i <= 5){
+      if(i <= 20){
          this.powers_manager.createPowerFromBlock(_brick.x, _brick.y);
       }
       _brick.kill();
     }
-}
+};
 
 
 Age.prototype.hitShipPower = function(_ship, _power){
-  _power.activateFunctionality();
-  
-  if(this.powers_manager.activePower)
+  if(this.powers_manager.activePower){    
+     this.powers_manager.activePower.backFunctionality();
      this.powers_manager.activePower.kill();
-
+     powers.removeChild(this.powers_manager.activePower);
+  }
+  
   this.powers_manager.activePower = _power;
+  this.powers_manager.activePower.activateFunctionality(); 
   var _powerArrives = game.add.tween(_power);
-       _powerArrives.to({x:745, y:565}, 1000, Phaser.Easing.Bounce.Out);
+       _powerArrives.to({x:743, y:563}, 1000, Phaser.Easing.Bounce.Out);
        //_powerArrives.onComplete.add(firstTween, this);
        _powerArrives.start();
-}
+};
 
 Age.prototype.update = function(){
-
+  this.powers_manager.update();
+  
   for(var i = 0; i < powers.length; i++){
-    if(!ballOnShip)
-      game.physics.arcade.collide(ship, powers.getAt(i), this.hitShipPower, null, this);
+    console.log(powers.length);
+    
+    if(powers.getAt(i).y> 600){
+      powers.removeChildAt(i);
+    }
+    
   }
 
+  if(!ballOnShip)
+      game.physics.arcade.collide(ship, powers,this.hitShipPower, null, this);
+    
+    
   if(this.bricks.countLiving() == 0) this.done = true;
+  
   for(var i = 0; i < balls.length; i++){
-    game.physics.arcade.collide(balls.getAt(i), this.bricks, this.hitBrickBall, null, this);
+      game.physics.arcade.collide(balls.getAt(i), this.bricks, this.hitBrickBall, null, this);
   } 
-}
+  
+};

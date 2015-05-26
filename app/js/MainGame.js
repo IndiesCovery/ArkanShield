@@ -5,11 +5,11 @@ var game = new Phaser.Game(800, 600, Phaser.AUTO, 'game', {
   render:render
 });
 
-var DEBUG = true;
+var DEBUG = false;
 
 var ballOnShip = true;
 var ship = {};
-//var balls;
+var balls;
 var ages = [];
 var currentAgeIndex = 0;
 var currentAge = {};
@@ -21,7 +21,7 @@ function preload() {
   game.load.image('screen_border', 'assets/images/screen_border.png');
   game.load.spritesheet('ship', 'assets/images/ShieldSprite.png', 64, 16, 5);
   game.load.image('ball', 'assets/images/ball.png');
-  game.load.image('doubleBallPower', 'assets/images/doubleBallPower.png');
+  game.load.spritesheet('lvl_powers', 'assets/images/lvl_powers.png',26,26,5);
 
   for(var i = 1; i <= 4; i++)
     game.load.image('brickStone'+i, 'assets/images/BlockStone_0'+i+'.png');
@@ -122,8 +122,11 @@ function update(){
       currentAge = new Age(ages[currentAgeIndex]);
       ballOnShip = true;
       
-      if(currentAge.powers_manager.activePower != undefined)
+      if(currentAge.powers_manager.activePower != undefined){
+        currentAge.powers_manager.activePower.backFunctionality();
         currentAge.powers_manager.activePower.kill();
+        currentAge.powers_manager.activePower = undefined;  
+      }
       
       balls.getAt(0).x = ship.x;
       balls.getAt(0).y = ship.y - (ship.height/2 + balls.getAt(0).height/2);
@@ -141,14 +144,18 @@ function update(){
     if(balls.getAt(i).y > 600){
       
       if(balls.length == 1){
+        
+        if(currentAge.powers_manager.activePower != undefined){
+           currentAge.powers_manager.activePower.kill();
+           currentAge.powers_manager.activePower.backFunctionality();
+           currentAge.powers_manager.activePower = undefined;
+        }
+        
         ballOnShip = true;
         balls.getAt(0).x = ship.x;
         balls.getAt(0).y = ship.y - (ship.height/2 + balls.getAt(0).height/2)-5;
         balls.getAt(0).body.velocity.x = 0;
-        balls.getAt(0).body.velocity.y = 0;
-
-        if(currentAge.powers_manager.activePower != undefined)
-           currentAge.powers_manager.activePower.kill();
+        balls.getAt(0).body.velocity.y = 0;      
       
       }else{
         balls.removeChildAt(i);
@@ -167,6 +174,7 @@ function manageGeneralInput(){
       ship.move(10,0);
   }else{
       ship.frame = 0;
+      
       if(DEBUG){
         var max = 0;
         var selected = 0;
@@ -177,20 +185,23 @@ function manageGeneralInput(){
             selected = i;
           }
         };
+        
         for (var i = 0; i < powers.length; i++) {
           if(ship.body.y-powers.getAt(i).y<10&&ship.body.y-powers.getAt(i).y>=0){
             ship.body.x = powers.getAt(i).x;
           }
         }
+        
         if(ship.body.y-balls.getAt(selected).y<30){
           ship.body.x = balls.getAt(selected).x-16-Math.random()*32;
         }
       }
+      
   }
     
   if(!ballOnShip)
     for(var i = 0; i< balls.length; i++)
-     game.physics.arcade.collide(ship, balls.getAt(i), hitShipBall, null, this);
+       game.physics.arcade.collide(ship, balls.getAt(i), hitShipBall, null, this);
   else
      balls.getAt(0).x = ship.x;
 }
